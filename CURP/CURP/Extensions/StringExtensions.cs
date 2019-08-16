@@ -1,12 +1,19 @@
-﻿namespace CalculadorCurp.Extensions
+﻿//-----------------------------------------------------------------------
+// <copyright file="StringExtensions.cs" company="">
+//     Copyright (c). All rights reserved.
+// </copyright>
+// <author>Roberto Franco</author>
+//-----------------------------------------------------------------------
+
+// ReSharper disable once CheckNamespace
+namespace System
 {
-    using System;
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     The string extensions.
+    ///     String extension methods
     /// </summary>
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         ///     Retrieves the n internal consonant of a text.
@@ -20,11 +27,15 @@
         public static char? InternalConsonant(this string str, int number)
         {
             if (str.Length < 2)
+            {
                 return null;
+            }
 
             // Validatiosn
             if (str.Trim().Split(' ').Length > 1)
+            {
                 throw new ArgumentException("The str must be a single word.");
+            }
 
             var constantRegex = new Regex(@"[b-df-hj-np-tv-z]|[ñ]", RegexOptions.IgnoreCase);
 
@@ -34,12 +45,16 @@
             for (var i = 1; i < str.Length; i++)
             {
                 if (!constantRegex.IsMatch(str[i].ToString()))
+                {
                     continue;
+                }
 
                 count++;
 
                 if (count == number)
+                {
                     return str[i];
+                }
             }
 
             return null;

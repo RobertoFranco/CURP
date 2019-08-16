@@ -1,4 +1,11 @@
-﻿namespace CalculadorCurp
+﻿//-----------------------------------------------------------------------
+// <copyright file="Estado.cs" company="">
+//     Copyright (c). All rights reserved.
+// </copyright>
+// <author>Roberto Franco</author>
+//-----------------------------------------------------------------------
+
+namespace CURP.Enums
 {
     /// <summary>
     ///     The estado.
