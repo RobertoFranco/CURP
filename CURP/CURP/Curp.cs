@@ -1,43 +1,27 @@
-﻿namespace CalculadorCurp
+﻿//-----------------------------------------------------------------------
+// <copyright file="Curp.cs" company="">
+//     Copyright (c). All rights reserved.
+// </copyright>
+// <author>Roberto Franco</author>
+//-----------------------------------------------------------------------
+
+namespace CURP
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using CalculadorCurp.Extensions;
+    using CURP.Enums;
 
     /// <summary>
-    /// The curp.
+    ///     La classe Curp.
     /// </summary>
     public class Curp
     {
         /// <summary>
-        ///     Las Palabras inconvenientes.
-        /// </summary>
-        public readonly HashSet<string> PalabrasInconvenientes = new HashSet<string>
-        {
-            "BACA", "BAKA", "BUEI", "BUEY",
-            "CACA", "CACO", "CAGA", "CAGO", "CAKA", "CAKO", "COGE", "COGI", "COJA", "COJE", "COJI", "COJO", "COLA", "CULO",
-            "FALO", "FETO",
-            "GETA", "GUEI", "GUEY",
-            "JETA", "JOTO",
-            "KACA", "KACO", "KAGA", "KAGO", "KAKA", "KAKO", "KOGE", "KOGI", "KOJA", "KOJE", "KOJI", "KOJO", "KOLA", "KULO",
-            "LILO", "LOCA", "LOCO", "LOKA", "LOKO",
-            "MAME", "MAMO", "MEAR", "MEAS", "MEON", "MIAR", "MION", "MOCO", "MOKO", "MULA", "MULO",
-            "NACA", "NACO",
-            "PEDA", "PEDO", "PENE", "PIPI", "PITO", "POPO", "PUTA", "PUTO",
-            "QULO",
-            "RATA", "ROBA", "ROBE", "ROBO", "RUIN",
-            "SENO",
-            "TETA",
-            "VACA", "VAGA", "VAGO", "VAKA", "VUEI", "VUEY",
-            "WUEI", "WUEY"
-        };
-
-        /// <summary>
         ///     Directorio de estados.
         /// </summary>
-        public readonly Dictionary<Estado, string> Estados = new Dictionary<Estado, string>
+        private static readonly Dictionary<Estado, string> CodigosEstado = new Dictionary<Estado, string>
         {
             { Estado.Aguascalientes, "AS" },
             { Estado.Baja_California, "BC" },
@@ -75,42 +59,30 @@
         };
 
         /// <summary>
-        ///     La Clave Única de Registro de Población.
+        ///     Las Palabras inconvenientes.
         /// </summary>
-        public readonly string CURP;
+        private static readonly HashSet<string> PalabrasInconvenientes = new HashSet<string>
+        {
+            "BACA", "BAKA", "BUEI", "BUEY",
+            "CACA", "CACO", "CAGA", "CAGO", "CAKA", "CAKO", "COGE", "COGI", "COJA", "COJE", "COJI", "COJO", "COLA", "CULO",
+            "FALO", "FETO",
+            "GETA", "GUEI", "GUEY",
+            "JETA", "JOTO",
+            "KACA", "KACO", "KAGA", "KAGO", "KAKA", "KAKO", "KOGE", "KOGI", "KOJA", "KOJE", "KOJI", "KOJO", "KOLA", "KULO",
+            "LILO", "LOCA", "LOCO", "LOKA", "LOKO",
+            "MAME", "MAMO", "MEAR", "MEAS", "MEON", "MIAR", "MION", "MOCO", "MOKO", "MULA", "MULO",
+            "NACA", "NACO",
+            "PEDA", "PEDO", "PENE", "PIPI", "PITO", "POPO", "PUTA", "PUTO",
+            "QULO",
+            "RATA", "ROBA", "ROBE", "ROBO", "RUIN",
+            "SENO",
+            "TETA",
+            "VACA", "VAGA", "VAGO", "VAKA", "VUEI", "VUEY",
+            "WUEI", "WUEY"
+        };
 
         /// <summary>
-        ///     El estado o entidad federativa de nacimiento.
-        /// </summary>
-        public readonly Estado Estado;
-
-        /// <summary>
-        ///     La fecha de nacimiento.
-        /// </summary>
-        public readonly DateTime FechaNacimiento;
-
-        /// <summary>
-        ///     El apellido materno.
-        /// </summary>
-        public readonly string Materno;
-
-        /// <summary>
-        ///     Los nombres.
-        /// </summary>
-        public readonly string Nombres;
-
-        /// <summary>
-        ///     El apellido paterno.
-        /// </summary>
-        public readonly string Paterno;
-
-        /// <summary>
-        ///     El sexo.
-        /// </summary>
-        public readonly Sexo Sexo;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Curp"/> class.
+        ///     Genera la CURP.
         /// </summary>
         /// <param name="nombres"> Los nombres.</param>
         /// <param name="paterno"> El apellido paterno.</param>
@@ -118,16 +90,48 @@
         /// <param name="sexo"> El sexo.</param>
         /// <param name="fechaNacimiento"> La fecha de nacimiento.</param>
         /// <param name="estado"> El estado o entidad federativa de nacimiento.</param>
-        public Curp(string nombres, string paterno, string materno, Sexo sexo, DateTime fechaNacimiento, Estado estado)
+        /// <returns>La CURP.</returns>
+        public static string Generar(string nombres, string paterno, string materno, Sexo sexo, DateTime fechaNacimiento, Estado estado)
         {
-            this.Nombres = nombres;
-            this.Paterno = paterno;
-            this.Materno = materno;
-            this.FechaNacimiento = fechaNacimiento;
-            this.Estado = estado;
-            this.Sexo = sexo;
+            // Aplicar filtros
+            var nombreTemp = Filtrar(nombres);
+            var paternoTemp = Filtrar(paterno);
+            var maternoTemp = Filtrar(materno);
 
-            this.CURP = this.CalculaCurp();
+            // Posicion 1-4
+            var uno = paternoTemp[0] == 'Ñ' ? 'X' : paternoTemp[0];
+            var dos = paternoTemp.InternalVowel(1) ?? 'X';
+            var tres = string.IsNullOrWhiteSpace(maternoTemp) ? 'X' : (maternoTemp[0] == 'Ñ' ? 'X' : maternoTemp[0]);
+            var cuatro = nombreTemp[0] == 'Ñ' ? 'X' : nombreTemp[0];
+
+            var fecha = $"{fechaNacimiento:yy}{fechaNacimiento.Month:D2}{fechaNacimiento.Day:D2}";
+            var estadoCodigo = CodigosEstado[estado];
+
+            // Posicion 14-16
+            var x = paternoTemp.InternalConsonant(1);
+            var y = maternoTemp?.InternalConsonant(1);
+            var z = nombreTemp.InternalConsonant(1);
+
+            var catorce = x == null ? 'X' : x == 'Ñ' ? 'X' : x;
+            var quince = y == null ? 'X' : y == 'Ñ' ? 'X' : y;
+            var dieciseis = z == null ? 'X' : z == 'Ñ' ? 'X' : z;
+
+            // Pre CURP
+            var preCURP = $"{uno}{dos}{tres}{cuatro}{fecha}{(char)sexo}{estadoCodigo}{catorce}{quince}{dieciseis}";
+
+            // Reemplaza el 2do caracter por una X donde comience con alguna de las palabras de la lisa de "Palabras Inconvenientes"
+            if (PalabrasInconvenientes.Contains(preCURP.Substring(0, 4)))
+            {
+                preCURP = preCURP[0] + "X" + preCURP.Substring(2);
+            }
+
+            // Digito diferenciador de homonimia y siglo
+            var diferenciador = fechaNacimiento.Year < 2000 ? "0" : "A";
+
+            // Digito verificador
+            var codigoVerificador = CodigoVerificador(preCURP);
+
+            return $"{preCURP}{diferenciador}{codigoVerificador}";
         }
 
         /// <summary>
@@ -322,54 +326,6 @@
                 .Replace('.', 'X');
 
             return str;
-        }
-
-        /// <summary>
-        ///     Calcula la CURP en base a la información de la persona.
-        /// </summary>
-        /// <returns> La CURP.</returns>
-        private string CalculaCurp()
-        {
-            // Aplicar filtros
-            var nombres = Filtrar(this.Nombres);
-            var paterno = Filtrar(this.Paterno);
-            var materno = Filtrar(this.Materno);
-
-            // Posicion 1-4
-            var uno = paterno[0] == 'Ñ' ? 'X' : paterno[0];
-            var dos = paterno.InternalVowel(1) ?? 'X';
-            var tres = string.IsNullOrWhiteSpace(materno) ? 'X' : (materno[0] == 'Ñ' ? 'X' : materno[0]);
-            var cuatro = nombres[0] == 'Ñ' ? 'X' : nombres[0];
-
-            var fecha = $"{this.FechaNacimiento:yy}{this.FechaNacimiento.Month:D2}{this.FechaNacimiento.Day:D2}";
-            var sexo = (char)this.Sexo;
-            var estado = this.Estados[this.Estado];
-
-            // Posicion 14-16
-            var x = paterno.InternalConsonant(1);
-            var y = materno?.InternalConsonant(1);
-            var z = nombres.InternalConsonant(1);
-
-            var catorce = x == null ? 'X' : (x == 'Ñ' ? 'X' : x);
-            var quince = y == null ? 'X' : (y == 'Ñ' ? 'X' : y);
-            var dieciseis = z == null ? 'X' : (z == 'Ñ' ? 'X' : z);
-
-            // Pre CURP
-            var preCURP = $"{uno}{dos}{tres}{cuatro}{fecha}{sexo}{estado}{catorce}{quince}{dieciseis}";
-
-            // Reemplaza el 2do caracter por una X donde comience con alguna de las palabras de la lisa de "Palabras Inconvenientes"
-            if (this.PalabrasInconvenientes.Contains(preCURP.Substring(0, 4)))
-            {
-                preCURP = preCURP[0] + "X" + preCURP.Substring(2);
-            }
-
-            // Digito diferenciador de homonimia y siglo
-            var diferenciador = this.FechaNacimiento.Year < 2000 ? "0" : "A";
-
-            // Digito verificador
-            var codigoVerificador = CodigoVerificador(preCURP);
-
-            return $"{preCURP}{diferenciador}{codigoVerificador}";
         }
     }
 }
