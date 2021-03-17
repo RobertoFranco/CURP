@@ -119,7 +119,7 @@ namespace CURP
             // Pre CURP
             var preCURP = $"{uno}{dos}{tres}{cuatro}{fecha}{(char)sexo}{estadoCodigo}{catorce}{quince}{dieciseis}";
 
-            // Reemplaza el 2do caracter por una X donde comience con alguna de las palabras de la lisa de "Palabras Inconvenientes"
+            // Reemplaza el 2do caracter por una X donde comience con alguna de las palabras de la lista de "Palabras Inconvenientes"
             if (PalabrasInconvenientes.Contains(preCURP.Substring(0, 4)))
             {
                 preCURP = preCURP[0] + "X" + preCURP.Substring(2);
@@ -142,133 +142,27 @@ namespace CURP
         /// <exception cref="ArgumentException"> Cuando alguno de los caracteres de la pre CURP no es válido.</exception>
         private static int CodigoVerificador(string preCURP)
         {
-            var contador = 18;
+            var contador = 19;
             var sumatoria = 0;
+            char[] caracteres = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z' };
 
             // Por cada caracter
             foreach (var caracter in preCURP)
-            {
-                int valor;
-
-                switch (caracter)
+            {                
+                bool encontrado = false;
+                for (int x=0;x<caracteres.Length;x++)
                 {
-                    case '0':
-                        valor = 0 * contador;
+                    if (caracter== caracteres[x])
+                    {
+                        encontrado = true;
+                        sumatoria =+ x * --contador;                        
                         break;
-                    case '1':
-                        valor = 1 * contador;
-                        break;
-                    case '2':
-                        valor = 2 * contador;
-                        break;
-                    case '3':
-                        valor = 3 * contador;
-                        break;
-                    case '4':
-                        valor = 4 * contador;
-                        break;
-                    case '5':
-                        valor = 5 * contador;
-                        break;
-                    case '6':
-                        valor = 6 * contador;
-                        break;
-                    case '7':
-                        valor = 7 * contador;
-                        break;
-                    case '8':
-                        valor = 8 * contador;
-                        break;
-                    case '9':
-                        valor = 9 * contador;
-                        break;
-                    case 'A':
-                        valor = 10 * contador;
-                        break;
-                    case 'B':
-                        valor = 11 * contador;
-                        break;
-                    case 'C':
-                        valor = 12 * contador;
-                        break;
-                    case 'D':
-                        valor = 13 * contador;
-                        break;
-                    case 'E':
-                        valor = 14 * contador;
-                        break;
-                    case 'F':
-                        valor = 15 * contador;
-                        break;
-                    case 'G':
-                        valor = 16 * contador;
-                        break;
-                    case 'H':
-                        valor = 17 * contador;
-                        break;
-                    case 'I':
-                        valor = 18 * contador;
-                        break;
-                    case 'J':
-                        valor = 19 * contador;
-                        break;
-                    case 'K':
-                        valor = 20 * contador;
-                        break;
-                    case 'L':
-                        valor = 21 * contador;
-                        break;
-                    case 'M':
-                        valor = 22 * contador;
-                        break;
-                    case 'N':
-                        valor = 23 * contador;
-                        break;
-                    case 'Ñ':
-                        valor = 24 * contador;
-                        break;
-                    case 'O':
-                        valor = 25 * contador;
-                        break;
-                    case 'P':
-                        valor = 26 * contador;
-                        break;
-                    case 'Q':
-                        valor = 27 * contador;
-                        break;
-                    case 'R':
-                        valor = 28 * contador;
-                        break;
-                    case 'S':
-                        valor = 29 * contador;
-                        break;
-                    case 'T':
-                        valor = 30 * contador;
-                        break;
-                    case 'U':
-                        valor = 31 * contador;
-                        break;
-                    case 'V':
-                        valor = 32 * contador;
-                        break;
-                    case 'W':
-                        valor = 33 * contador;
-                        break;
-                    case 'X':
-                        valor = 34 * contador;
-                        break;
-                    case 'Y':
-                        valor = 35 * contador;
-                        break;
-                    case 'Z':
-                        valor = 36 * contador;
-                        break;
-                    default:
-                        throw new ArgumentException($"Caracter invalido en la compisicion de la pre CURP. [{caracter}]");
+                    }
+                }            
+                if (!encontrado)
+                {
+                    throw new ArgumentException($"Carácter invalido en la compisicion de la pre CURP. [{caracter}]");
                 }
-
-                contador--;
-                sumatoria = sumatoria + valor;
             }
 
             // 12.- 2do digito verificador
