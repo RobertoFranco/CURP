@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="Curp.cs" company="">
 //     Copyright (c). All rights reserved.
 // </copyright>
@@ -142,27 +142,23 @@ namespace CURP
         /// <exception cref="ArgumentException"> Cuando alguno de los caracteres de la pre CURP no es válido.</exception>
         private static int CodigoVerificador(string preCURP)
         {
-            var contador = 19;
+            var contador = 18;
             var sumatoria = 0;
-            char[] caracteres = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z' };
+            const string caracteres = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
 
             // Por cada caracter
             foreach (var caracter in preCURP)
-            {                
-                bool encontrado = false;
-                for (int x=0;x<caracteres.Length;x++)
+            {
+                var index = caracteres.IndexOf(caracter);
+
+                if (index == -1)
                 {
-                    if (caracter== caracteres[x])
-                    {
-                        encontrado = true;
-                        sumatoria =+ x * --contador;                        
-                        break;
-                    }
-                }            
-                if (!encontrado)
-                {
-                    throw new ArgumentException($"Carácter invalido en la compisicion de la pre CURP. [{caracter}]");
+                    throw new ArgumentException($"Carácter inválido en la compisición de la pre CURP. [{caracter}]");
                 }
+
+                var valor = index * contador;
+                contador--;
+                sumatoria += valor;
             }
 
             // 12.- 2do digito verificador
