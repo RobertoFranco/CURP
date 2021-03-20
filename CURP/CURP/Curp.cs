@@ -11,7 +11,7 @@ namespace CURP
     using System.Collections.Generic;
     using System.Linq;
 
-    using CURP.Enums;
+    using Enums;
 
     /// <summary>
     ///     La classe Curp.

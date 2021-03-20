@@ -8,7 +8,7 @@
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    using System.Text.RegularExpressions;
+    using Text.RegularExpressions;
 
     /// <summary>
     ///     String extension methods

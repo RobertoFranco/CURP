@@ -10,7 +10,7 @@ namespace CURP.Test
     using System;
 
     using CURP;
-    using CURP.Enums;
+    using Enums;
 
     using NUnit.Framework;
 
