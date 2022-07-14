@@ -5,8 +5,7 @@ Proyecto C# .NET Standard para calcular la CURP en base a lo establecido en el I
 
 En México, la Clave Única de Registro de Población (CURP) es un código alfanumérico único de identidad de 18 caracteres utilizado para identificar oficialmente tanto a residentes como a ciudadanos mexicanos de todo el país.
 
-![stack Overflow](https://consultas.curp.gob.mx/CurpSP/imagenes/image0001.jpg)
-
+![curp](https://user-images.githubusercontent.com/16767773/179096206-fd160dd5-4370-43ca-9f68-a148c6e4a1cd.jpeg)
 
 Referencias:
 
